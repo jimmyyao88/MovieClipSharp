@@ -59,7 +59,7 @@ module egret {
         /**
          *
          * @param frameName {string} 指定动画的名称
-         * @param currentFrameIndex {number} 开始的动画帧，值在开始帧和结束帧之间,值无效设置为第一帧
+         * @param currentFrameIndex {number} 开始的动画帧，值在开始帧和结束帧之间,值无效设置为0，既第一帧
          * @param isReverse {number} 是否开启逆向播放
          * @param _beginFrame {number} 动画的开始帧
          * @param _endFrame {number} 动画的结束帧
@@ -204,16 +204,11 @@ module egret {
         private _isPause:boolean = false;
         private _currentFrameIndex:number = 0;
         private _currentFrameName:string;
-
         private _isReverse = false;
         private _playFrequency:number = 0;
-
         private _isPlaying:boolean = false;
         private movieClip:MovieClipSharp;
-
         private bitmap:Bitmap;
-
-
 
         constructor(public data, texture:Texture) {
             this._frameData = data;
@@ -256,7 +251,7 @@ module egret {
             }
 
             if(_endFrame && _endFrame > this._beginFrame ){
-                this._totalFrame = Math.min(totalFrame,_endFrame);
+                this._totalFrame = Math.min(totalFrame,_endFrame+1);
             }
             this._playFrequency = 0;
             this._isPlaying = true;
@@ -350,6 +345,7 @@ module egret {
                         this.playOnce(this._currentFrameName,++this._playFrequency);
                     }
                 }
+
             }else {
                 this._currentFrameIndex++;
                 if (this._currentFrameIndex >= this._totalFrame) {
@@ -358,6 +354,7 @@ module egret {
                         this.playOnce(this._currentFrameName,++this._playFrequency);
                     }
                 }
+
             }
         }
 

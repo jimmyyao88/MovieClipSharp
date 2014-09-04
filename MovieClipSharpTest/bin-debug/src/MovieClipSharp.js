@@ -224,7 +224,7 @@ var egret;
             }
 
             if (_endFrame && _endFrame > this._beginFrame) {
-                this._totalFrame = Math.min(totalFrame, _endFrame);
+                this._totalFrame = Math.min(totalFrame, _endFrame + 1);
             }
             this._playFrequency = 0;
             this._isPlaying = true;

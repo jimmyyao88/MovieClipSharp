@@ -94,14 +94,16 @@ class Main extends egret.DisplayObjectContainer{
         //获得结束事件，多传递了一个播放次数，其它参数以后添加
         this.monkey.addEventListener("end_attack" , this.endAttack , this);
         //第一次动画从第12帧开始，每次循环在5-19帧之间
-        this.monkey.gotoAndPlay("attack",10,true,0,18);
+        this.monkey.gotoAndPlay("attack",10,false,2,18);
 
     }
     public endAttack(e){
         console.log("播放次数="+e.data.playFrequencyt);
         //播放五次，停止到最开始的动作
         if(e.data.playFrequencyt==5){
-            this.monkey.gotoAndStop(e.data.framName);
+            this.monkey.pause();
+            this.monkey.continue();
+            //this.monkey.gotoAndStop(e.data.framName);
         }
     }
 
