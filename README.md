@@ -16,7 +16,8 @@ Egret MovieClip的加强版,在原来的基础上增加了一些方法，具体�
  * @param _beginFrame {number} 动画的开始帧
  * @param _endFrame {number} 动画的结束帧
  */
-public gotoAndPlay(frameName:string,currentFrameIndex?:number,isReverse?:boolean ,_beginFrame?:number,_endFrame?:number)
+public gotoAndPlay(frameName:string,currentFrameIndex?:number,isReverse?:boolean ,
+_beginFrame?:number,_endFrame?:number)
 
 /**
  * 给指定动画帧加一个事件
