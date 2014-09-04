@@ -12,7 +12,7 @@ Egret MovieClip的加强版,在原来的基础上增加了一些方法，具体�
  *
  * @param frameName {string} 指定动画的名称
  * @param currentFrameIndex {number} 开始的动画帧，值在开始帧和结束帧之间,值无效设置为第一帧
- * @param isReverse {number} 是否开启逆向播放
+ * @param isReverse {boolean} 是否开启逆向播放
  * @param _beginFrame {number} 动画的开始帧
  * @param _endFrame {number} 动画的结束帧
  */
