@@ -49,19 +49,14 @@ var egret;
             * 动画的播放帧频
             */
             this.frameRate = 60;
-            if (data instanceof DefaultMovieSharpClipDelegate) {
-                egret.Logger.warning("MovieClip#constructor接口参数已经变更，请尽快调整用法为 new MovieClipSharp(data,texture)");
-                this.delegate = data;
-            } else {
-                this.delegate = new DefaultMovieSharpClipDelegate(data, texture);
-            }
+            this.delegate = new DefaultMovieSharpClipDelegate(data, texture);
             this.delegate.setMovieClip(this);
         }
         /**
         *
         * @param frameName {string} 指定动画的名称
-        * @param currentFrameIndex {number} 开始的动画帧，值在开始帧和结束帧之间,值无效设置为第一帧
-        * @param isReverse {number} 是否开启逆向播放
+        * @param currentFrameIndex {number} 开始的动画帧，值在开始帧和结束帧之间,值无效设置为0，既第一帧
+        * @param isReverse {boolean} 是否开启逆向播放
         * @param _beginFrame {number} 动画的开始帧
         * @param _endFrame {number} 动画的结束帧
         */
@@ -82,12 +77,11 @@ var egret;
         /**
         *
         * @param frameName {string} 指定帧的帧名称
-        * @param currentFrameIndex {number} 开始的动画帧，值在开始帧和结束帧之间,值无效设置为第一帧
-        * @param _beginFrame {number} 动画的开始帧
-        * @param _endFrame {number} 动画的结束帧
+        * @param currentFrameIndex {number} 停止指定的动画帧
         */
-        MovieClipSharp.prototype.gotoAndStop = function (frameName) {
-            this.delegate.gotoAndStop(frameName);
+        MovieClipSharp.prototype.gotoAndStop = function (frameName, currentFrameIndex) {
+            if (typeof currentFrameIndex === "undefined") { currentFrameIndex = 0; }
+            this.delegate.gotoAndStop(frameName, currentFrameIndex);
         };
 
         /**
@@ -125,7 +119,6 @@ var egret;
         * @deprecated
         */
         MovieClipSharp.prototype.release = function () {
-            egret.Logger.warning("MovieClip#release方法即将废弃");
             this.dispose();
         };
 
@@ -135,7 +128,6 @@ var egret;
         * @returns {number}
         */
         MovieClipSharp.prototype.getCurrentFrameIndex = function () {
-            egret.Logger.warning("MovieClip#getCurrentFrameIndex方法即将废弃");
             return this.delegate["_currentFrameIndex"];
         };
 
@@ -146,7 +138,6 @@ var egret;
         * @returns {number}
         */
         MovieClipSharp.prototype.getTotalFrame = function () {
-            egret.Logger.warning("MovieClip#getTotalFrame方法即将废弃");
             return this.delegate["_totalFrame"];
         };
 
@@ -156,7 +147,6 @@ var egret;
         * @param value {number}
         */
         MovieClipSharp.prototype.setInterval = function (value) {
-            egret.Logger.warning("MovieClip#setInterval方法即将废弃,请使用MovieClip#frameRate代替");
             this.frameRate = 60 / value;
         };
 
@@ -166,7 +156,6 @@ var egret;
         * @returns {boolean}
         */
         MovieClipSharp.prototype.getIsPlaying = function () {
-            egret.Logger.warning("MovieClip#getIsPlaying方法即将废弃");
             return this.delegate["isPlaying"];
         };
         return MovieClipSharp;
@@ -213,35 +202,32 @@ var egret;
             if (typeof currentFrameIndex === "undefined") { currentFrameIndex = 0; }
             if (typeof _beginFrame === "undefined") { _beginFrame = 0; }
             this.checkHasFrame(frameName);
+            this._playFrequency = 0;
+            this._isPlaying = true;
+            this._currentFrameName = frameName;
             this._isReverse = isReverse;
+            this._passTime = 0;
+
             var totalFrame = this._frameData.frames[frameName].totalFrame;
             this._totalFrame = totalFrame;
-
             if (_beginFrame && _beginFrame > 0 && _beginFrame < totalFrame) {
                 this._beginFrame = _beginFrame;
             } else {
                 this._beginFrame = 0;
             }
-
             if (_endFrame && _endFrame > this._beginFrame) {
                 this._totalFrame = Math.min(totalFrame, _endFrame + 1);
             }
-            this._playFrequency = 0;
-            this._isPlaying = true;
-            this._currentFrameName = frameName;
-
             if (currentFrameIndex && (currentFrameIndex > this._totalFrame || currentFrameIndex < this._beginFrame)) {
                 this._currentFrameIndex = _beginFrame;
             } else {
                 this._currentFrameIndex = currentFrameIndex;
             }
             this.playNextFrame();
-            this._passTime = 0;
             egret.Ticker.getInstance().register(this.update, this);
         };
 
         DefaultMovieSharpClipDelegate.prototype.gotoAndStop = function (frameName, currentFrameIndex) {
-            if (typeof currentFrameIndex === "undefined") { currentFrameIndex = 0; }
             this.checkHasFrame(frameName);
             this.stop();
             this._passTime = 0;

@@ -29,7 +29,6 @@
  * Created by http://bbs.egret-labs.org SongSharp on 2014/9/4.
  */
 module egret {
-
     /**
      * @class egret.MovieClipSharp
      * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。
@@ -46,13 +45,7 @@ module egret {
 
         constructor(data, texture?:Texture) {
             super();
-            if (data instanceof DefaultMovieSharpClipDelegate){
-                Logger.warning("MovieClip#constructor接口参数已经变更，请尽快调整用法为 new MovieClipSharp(data,texture)")
-                this.delegate = data;
-            }
-            else{
-                this.delegate = new DefaultMovieSharpClipDelegate(data, texture);
-            }
+            this.delegate = new DefaultMovieSharpClipDelegate(data, texture);
             this.delegate.setMovieClip(this);
         }
 
@@ -60,12 +53,12 @@ module egret {
          *
          * @param frameName {string} 指定动画的名称
          * @param currentFrameIndex {number} 开始的动画帧，值在开始帧和结束帧之间,值无效设置为0，既第一帧
-         * @param isReverse {number} 是否开启逆向播放
+         * @param isReverse {boolean} 是否开启逆向播放
          * @param _beginFrame {number} 动画的开始帧
          * @param _endFrame {number} 动画的结束帧
          */
         public gotoAndPlay(frameName:string,currentFrameIndex?:number,isReverse?:boolean ,
-        _beginFrame?:number,_endFrame?:number) {
+                           _beginFrame?:number,_endFrame?:number) {
             this.delegate.gotoAndPlay(frameName,currentFrameIndex,isReverse,_beginFrame,_endFrame);
         }
 
@@ -82,12 +75,10 @@ module egret {
         /**
          *
          * @param frameName {string} 指定帧的帧名称
-         * @param currentFrameIndex {number} 开始的动画帧，值在开始帧和结束帧之间,值无效设置为第一帧
-         * @param _beginFrame {number} 动画的开始帧
-         * @param _endFrame {number} 动画的结束帧
+         * @param currentFrameIndex {number} 停止指定的动画帧
          */
-        public gotoAndStop(frameName:string){
-            this.delegate.gotoAndStop(frameName);
+        public gotoAndStop(frameName:string,currentFrameIndex:number=0){
+            this.delegate.gotoAndStop(frameName,currentFrameIndex);
         }
 
         /**
@@ -126,7 +117,6 @@ module egret {
          * @deprecated
          */
         public release() {
-            Logger.warning("MovieClip#release方法即将废弃");
             this.dispose();
         }
 
@@ -137,7 +127,6 @@ module egret {
          * @returns {number}
          */
         public getCurrentFrameIndex():number {
-            Logger.warning("MovieClip#getCurrentFrameIndex方法即将废弃");
             return this.delegate["_currentFrameIndex"];
         }
 
@@ -148,7 +137,6 @@ module egret {
          * @returns {number}
          */
         public getTotalFrame():number {
-            Logger.warning("MovieClip#getTotalFrame方法即将废弃");
             return this.delegate["_totalFrame"];
         }
 
@@ -158,7 +146,6 @@ module egret {
          * @param value {number}
          */
         public setInterval(value:number) {
-            Logger.warning("MovieClip#setInterval方法即将废弃,请使用MovieClip#frameRate代替");
             this.frameRate = 60 / value;
         }
 
@@ -168,28 +155,16 @@ module egret {
          * @returns {boolean}
          */
         public getIsPlaying():boolean {
-            Logger.warning("MovieClip#getIsPlaying方法即将废弃");
             return this.delegate["isPlaying"];
         }
     }
 
     export interface MovieClipSharpDelegate {
-
-
         gotoAndPlay(frameName:string,currentFrameIndex?:number,_isReverse?:boolean ,
                     _beginFrame?:number,_endFrame?:number):void;
-
-
-        gotoAndStop(frameName:string):void;
-
-
-
+        gotoAndStop(frameName:string,currentFrameIndex?:number):void;
         stop():void;
-
-
         dispose():void;
-
-
         setMovieClip(MovieClip:MovieClipSharp):void;
     }
 
@@ -240,39 +215,37 @@ module egret {
         public gotoAndPlay(frameName:string,currentFrameIndex:number=0,isReverse?:boolean ,
                            _beginFrame:number=0,_endFrame?:number):void {
             this.checkHasFrame(frameName);
+            this._playFrequency = 0;
+            this._isPlaying = true;
+            this._currentFrameName = frameName;
             this._isReverse =  isReverse;
+            this._passTime = 0;
+
             var totalFrame = this._frameData.frames[frameName].totalFrame;
             this._totalFrame = totalFrame;
-
             if(_beginFrame && _beginFrame > 0 && _beginFrame < totalFrame){
                 this._beginFrame = _beginFrame ;
             }else{
                 this._beginFrame = 0;
             }
-
             if(_endFrame && _endFrame > this._beginFrame ){
                 this._totalFrame = Math.min(totalFrame,_endFrame+1);
             }
-            this._playFrequency = 0;
-            this._isPlaying = true;
-            this._currentFrameName = frameName;
-
             if(currentFrameIndex && (currentFrameIndex > this._totalFrame || currentFrameIndex < this._beginFrame)){
                 this._currentFrameIndex = _beginFrame;
             }else{
                 this._currentFrameIndex = currentFrameIndex;
             }
             this.playNextFrame();
-            this._passTime = 0;
             Ticker.getInstance().register(this.update, this);
         }
 
 
-        public gotoAndStop(frameName:string,currentFrameIndex:number=0):void {
+        public gotoAndStop(frameName:string,currentFrameIndex?:number):void {
             this.checkHasFrame(frameName);
             this.stop();
             this._passTime = 0;
-            this._currentFrameIndex = currentFrameIndex;
+            this._currentFrameIndex = currentFrameIndex?currentFrameIndex:0;
             this._currentFrameName = frameName;
             this._totalFrame = this._frameData.frames[frameName].totalFrame;
             this.playNextFrame();
@@ -370,10 +343,7 @@ module egret {
             }
             return texture;
         }
-
-
     }
-
 }
 
 
