@@ -26,10 +26,13 @@
  */
 
 egret_h5.startGame = function () {
-    var  context = egret.MainContext.instance;
-    context.touchContext = new egret.HTML5TouchContext();
+    var canvas = document.getElementById(egret.StageDelegate.canvas_name);
+    context = egret.MainContext.instance;
+    context.touchContext = new egret.HTML5TouchContext(canvas);
     context.deviceContext = new egret.HTML5DeviceContext();
     context.netContext = new egret.HTML5NetContext();
+
+
 
     egret.StageDelegate.getInstance().setDesignSize(480, 800);
     context.stage = new egret.Stage();
@@ -37,12 +40,11 @@ egret_h5.startGame = function () {
     context.stage.scaleMode = scaleMode;
 
     //WebGL是egret的Beta特性，默认关闭
-    var rendererType = 0;
-    if (rendererType == 1) {// egret.WebGLUtils.checkCanUseWebGL()) {
-        context.rendererContext = new egret.WebGLRenderer();
+    if(false){// egret.WebGLUtils.checkCanUseWebGL()) {
+        context.rendererContext = new egret.WebGLRenderer(canvas);
     }
     else {
-        context.rendererContext = new egret.HTML5CanvasRenderer();
+        context.rendererContext = new egret.HTML5CanvasRenderer(canvas);
     }
 
     egret.MainContext.instance.rendererContext.texture_scale_factor = 1;

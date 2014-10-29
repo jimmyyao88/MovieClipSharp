@@ -231,7 +231,7 @@ var egret;
             this.checkHasFrame(frameName);
             this.stop();
             this._passTime = 0;
-            this._currentFrameIndex = currentFrameIndex;
+            this._currentFrameIndex = currentFrameIndex ? currentFrameIndex : 0;
             this._currentFrameName = frameName;
             this._totalFrame = this._frameData.frames[frameName].totalFrame;
             this.playNextFrame();
