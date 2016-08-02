@@ -24,31 +24,29 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 /**
  * Created by http://bbs.egret-labs.org SongSharp on 2014/9/4.
  */
-module egret {
+var egret;
+(function (egret) {
     /**
      * @class egret.MovieClipSharp
      * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。
      * @extends egret.DisplayObjectContainer
      */
-    export class MovieClipSharp extends DisplayObjectContainer {
-
-        private delegate:DefaultMovieSharpClipDelegate;
-        /**
-         * @member {number} egret.MovieClip#frameRate
-         * 动画的播放帧频
-         */
-        public frameRate:number = 60;
-
-        constructor(data, texture?:Texture) {
-            super();
+    var MovieClipSharp = (function (_super) {
+        __extends(MovieClipSharp, _super);
+        function MovieClipSharp(data, texture) {
+            _super.call(this);
+            /**
+             * @member {number} egret.MovieClip#frameRate
+             * 动画的播放帧频
+             */
+            this.frameRate = 60;
             this.delegate = new DefaultMovieSharpClipDelegate(data, texture);
             this.delegate.setMovieClip(this);
         }
-
+        var d = __define,c=MovieClipSharp,p=c.prototype;
         /**
          *
          * @param frameName {string} 指定动画的名称
@@ -57,140 +55,114 @@ module egret {
          * @param _beginFrame {number} 动画的开始帧
          * @param _endFrame {number} 动画的结束帧
          */
-        public gotoAndPlay(frameName:string, currentFrameIndex?:number, isReverse?:boolean,
-                           _beginFrame?:number, _endFrame?:number) {
+        p.gotoAndPlay = function (frameName, currentFrameIndex, isReverse, _beginFrame, _endFrame) {
             this.delegate.gotoAndPlay(frameName, currentFrameIndex, isReverse, _beginFrame, _endFrame);
-        }
-
+        };
         /**
          * 给指定动画帧加一个事件
          * @param frameName {string} 指定动画的名称
          * @param frameIndex {number} 添加到指定动画帧，0为第一帧
          * @param action {string} 触发事件的名称
          */
-        public addActionEvent(frameName:string, frameIndex:number, action:string) {
+        p.addActionEvent = function (frameName, frameIndex, action) {
             this.delegate.addActionEvent(frameName, frameIndex, action);
-        }
-
+        };
         /**
          *
          * @param frameName {string} 指定帧的帧名称
          * @param currentFrameIndex {number} 停止指定的动画帧
          */
-        public gotoAndStop(frameName:string, currentFrameIndex:number = 0) {
+        p.gotoAndStop = function (frameName, currentFrameIndex) {
+            if (currentFrameIndex === void 0) { currentFrameIndex = 0; }
             this.delegate.gotoAndStop(frameName, currentFrameIndex);
-        }
-
+        };
         /**
          * 暂停动画
          */
-        public pause():void {
+        p.pause = function () {
             this.delegate.pause();
-        }
-
+        };
         /**
          * 继续动画，只有暂停的有效，停止后的无效
          */
-        public continue():void {
+        p.continue = function () {
             this.delegate.continue();
-        }
-
+        };
         /**
          * 停止动画
          * @method egret.MovieClip#stop
          */
-        public stop() {
+        p.stop = function () {
             this.delegate.stop();
-        }
-
+        };
         /**
          * @method egret.MovieClip#dispose
          */
-        public dispose():void {
+        p.dispose = function () {
             this.delegate.dispose();
-
-        }
-
+        };
         /**
          * 方法名改为 dispose
          * @method egret.MovieClip#release
          * @deprecated
          */
-        public release() {
+        p.release = function () {
             this.dispose();
-        }
-
-
+        };
         /**
          * @method egret.MovieClip#getCurrentFrameIndex
          * @deprecated
          * @returns {number}
          */
-        public getCurrentFrameIndex():number {
+        p.getCurrentFrameIndex = function () {
             return this.delegate["_currentFrameIndex"];
-        }
-
+        };
         /**
          * 获取当前影片剪辑的帧频数
          * @method egret.MovieClip#getTotalFrame
          * @deprecated
          * @returns {number}
          */
-        public getTotalFrame():number {
+        p.getTotalFrame = function () {
             return this.delegate["_totalFrame"];
-        }
-
+        };
         /**
          * @method egret.MovieClip#setInterval
          * @deprecated
          * @param value {number}
          */
-        public setInterval(value:number) {
+        p.setInterval = function (value) {
             this.frameRate = 60 / value;
-        }
-
+        };
         /**
          * @method egret.MovieClip#getIsPlaying
          * @deprecated
          * @returns {boolean}
          */
-        public getIsPlaying():boolean {
+        p.getIsPlaying = function () {
             return this.delegate["isPlaying"];
-        }
-    }
-
-    export interface MovieClipSharpDelegate {
-        gotoAndPlay(frameName:string, currentFrameIndex?:number, _isReverse?:boolean,
-                    _beginFrame?:number, _endFrame?:number):void;
-        gotoAndStop(frameName:string, currentFrameIndex?:number):void;
-        stop():void;
-        dispose():void;
-        setMovieClip(MovieClip:MovieClipSharp):void;
-    }
-
-
-    export class DefaultMovieSharpClipDelegate implements MovieClipSharpDelegate {
-        private _frameData;
-        private _totalFrame:number = 0;
-        private _beginFrame:number = 0;
-        private _spriteSheet:SpriteSheet;
-        private _passTime:number = 0;
-        private _pauseTime:number = 0;
-        private _isPause:boolean = false;
-        private _currentFrameIndex:number = 0;
-        private _currentFrameName:string;
-        private _isReverse = false;
-        private _playFrequency:number = 0;
-        private _isPlaying:boolean = false;
-        private movieClip:MovieClipSharp;
-        private bitmap:Bitmap;
-
-        constructor(public data, texture:Texture) {
+        };
+        return MovieClipSharp;
+    }(egret.DisplayObjectContainer));
+    egret.MovieClipSharp = MovieClipSharp;
+    egret.registerClass(MovieClipSharp,'egret.MovieClipSharp');
+    var DefaultMovieSharpClipDelegate = (function () {
+        function DefaultMovieSharpClipDelegate(data, texture) {
+            this.data = data;
+            this._totalFrame = 0;
+            this._beginFrame = 0;
+            this._passTime = 0;
+            this._pauseTime = 0;
+            this._isPause = false;
+            this._currentFrameIndex = 0;
+            this._isReverse = false;
+            this._playFrequency = 0;
+            this._isPlaying = false;
             this._frameData = data;
-            this._spriteSheet = new SpriteSheet(texture);
+            this._spriteSheet = new egret.SpriteSheet(texture);
         }
-
-        public addActionEvent(frameName:string, frameIndex:number, actionEventName:string) {
+        var d = __define,c=DefaultMovieSharpClipDelegate,p=c.prototype;
+        p.addActionEvent = function (frameName, frameIndex, actionEventName) {
             var frame = this._frameData.frames[frameName];
             if (frame == undefined) {
                 //egret.Logger.fatal("MovieClip没有对应的frame：", frameName);
@@ -202,30 +174,27 @@ module egret {
                 return;
             }
             frameData["action"] = actionEventName;
-
-        }
-
-        public setMovieClip(movieClip:MovieClipSharp):void {
+        };
+        p.setMovieClip = function (movieClip) {
             this.movieClip = movieClip;
             this.bitmap = new egret.Bitmap();
             this.movieClip.addChild(this.bitmap);
-
-        }
-
-        public gotoAndPlay(frameName:string, currentFrameIndex:number = 0, isReverse?:boolean,
-                           _beginFrame:number = 0, _endFrame?:number):void {
+        };
+        p.gotoAndPlay = function (frameName, currentFrameIndex, isReverse, _beginFrame, _endFrame) {
+            if (currentFrameIndex === void 0) { currentFrameIndex = 0; }
+            if (_beginFrame === void 0) { _beginFrame = 0; }
             this.checkHasFrame(frameName);
             this._playFrequency = 0;
             this._isPlaying = true;
             this._currentFrameName = frameName;
             this._isReverse = isReverse;
             this._passTime = 0;
-
             var totalFrame = this._frameData.frames[frameName].totalFrame;
             this._totalFrame = totalFrame;
             if (_beginFrame && _beginFrame > 0 && _beginFrame < totalFrame) {
                 this._beginFrame = _beginFrame;
-            } else {
+            }
+            else {
                 this._beginFrame = 0;
             }
             if (_endFrame && _endFrame > this._beginFrame) {
@@ -233,15 +202,14 @@ module egret {
             }
             if (currentFrameIndex && (currentFrameIndex > this._totalFrame || currentFrameIndex < this._beginFrame)) {
                 this._currentFrameIndex = _beginFrame;
-            } else {
+            }
+            else {
                 this._currentFrameIndex = currentFrameIndex;
             }
             this.playNextFrame();
-            Ticker.getInstance().register(this.update, this);
-        }
-
-
-        public gotoAndStop(frameName:string, currentFrameIndex?:number):void {
+            egret.Ticker.getInstance().register(this.update, this);
+        };
+        p.gotoAndStop = function (frameName, currentFrameIndex) {
             this.checkHasFrame(frameName);
             this.stop();
             this._passTime = 0;
@@ -249,34 +217,25 @@ module egret {
             this._currentFrameName = frameName;
             this._totalFrame = this._frameData.frames[frameName].totalFrame;
             this.playNextFrame();
-        }
-
-        public pause():void {
+        };
+        p.pause = function () {
             this._isPause = true;
-        }
-
-        public continue():void {
+        };
+        p.continue = function () {
             this._isPause = false;
             this._pauseTime = 0;
-        }
-
-        public stop():void {
+        };
+        p.stop = function () {
             this._isPlaying = false;
-            Ticker.getInstance().unregister(this.update, this);
-        }
-
-
-        public dispose():void {
-
-        }
-
-        private checkHasFrame(name:string) {
+            egret.Ticker.getInstance().unregister(this.update, this);
+        };
+        p.dispose = function () {
+        };
+        p.checkHasFrame = function (name) {
             if (this._frameData.frames[name] == undefined) {
-                //egret.Logger.fatal("MovieClip没有对应的frame：", name);
             }
-        }
-
-        private update(advancedTime:number):void {
+        };
+        p.update = function (advancedTime) {
             if (this._isPause) {
                 this._pauseTime += advancedTime;
                 this._passTime += advancedTime;
@@ -295,65 +254,61 @@ module egret {
                 num--;
             }
             this._passTime += advancedTime;
-        }
-
-        private playNextFrame(needShow:boolean = true) {
+        };
+        p.playNextFrame = function (needShow) {
+            if (needShow === void 0) { needShow = true; }
             var frameData = this._frameData.frames[this._currentFrameName].childrenFrame[this._currentFrameIndex];
             if (needShow) {
-                var texture:Texture = this.getTexture(frameData.res);
+                var texture = this.getTexture(frameData.res);
                 var bitmap = this.bitmap;
                 bitmap.x = frameData.x;
                 bitmap.y = frameData.y;
                 bitmap.texture = texture;
             }
-
             if (frameData.action != null) {
                 this.movieClip.dispatchEventWith(frameData.action, false, {
                     playFrequencyt: this._playFrequency,
                     framName: this._currentFrameName
                 });
             }
-
             if (this._isReverse) {
                 this._currentFrameIndex--;
                 if (this._currentFrameIndex <= this._beginFrame) {
                     this._currentFrameIndex = this._totalFrame;
-                    if (frameData.action != Event.COMPLETE) {
-                        this.movieClip.dispatchEventWith(Event.COMPLETE);
+                    if (frameData.action != egret.Event.COMPLETE) {
+                        this.movieClip.dispatchEventWith(egret.Event.COMPLETE);
                     }
                     if (this.playOnce) {
                         this.playOnce(this._currentFrameName, ++this._playFrequency);
                     }
                 }
-
-            } else {
+            }
+            else {
                 this._currentFrameIndex++;
                 if (this._currentFrameIndex >= this._totalFrame) {
                     this._currentFrameIndex = this._beginFrame;
-                    if (frameData.action != Event.COMPLETE) {
-                        this.movieClip.dispatchEventWith(Event.COMPLETE);
+                    if (frameData.action != egret.Event.COMPLETE) {
+                        this.movieClip.dispatchEventWith(egret.Event.COMPLETE);
                     }
                     if (this.playOnce) {
                         this.playOnce(this._currentFrameName, ++this._playFrequency);
                     }
                 }
-
             }
-        }
-
-        private playOnce(FrameName:string, playFrequency:number) {
-
-        }
-
-        private getTexture(name:string):Texture {
+        };
+        p.playOnce = function (FrameName, playFrequency) {
+        };
+        p.getTexture = function (name) {
             var resData = this._frameData.res[name];
             var texture = this._spriteSheet.getTexture(name);
             if (!texture) {
                 texture = this._spriteSheet.createTexture(name, resData.x, resData.y, resData.w, resData.h);
             }
             return texture;
-        }
-    }
-}
-
-
+        };
+        return DefaultMovieSharpClipDelegate;
+    }());
+    egret.DefaultMovieSharpClipDelegate = DefaultMovieSharpClipDelegate;
+    egret.registerClass(DefaultMovieSharpClipDelegate,'egret.DefaultMovieSharpClipDelegate',["egret.MovieClipSharpDelegate"]);
+})(egret || (egret = {}));
+//# sourceMappingURL=MovieClipSharp.js.map
